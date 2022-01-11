@@ -82,7 +82,6 @@ class UserForm extends React.Component {
   }
 
   render(){
-    console.log(this.props)
     const { avatar, bio, first_name, last_name, email, username, password, splash_image } = this.state
     return(
       <div className='wrapper'>

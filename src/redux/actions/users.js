@@ -28,7 +28,6 @@ const fetchingUser = token => {
       .then(res => res.json())
       .then(data => {
         if (data.user.id !== undefined) {
-          console.log(data.user)
           dispatch(fetchedUser(data))
         } else {
           dispatch(clearLoading())
@@ -43,21 +42,20 @@ const addingUser = user => {
 
     fetch(`${BASE_URL()}/users`, {
       method: 'POST',
-      // headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({user})
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         if (data.authenticated) {
           dispatch(fetchedUser(data))
           localStorage.setItem('token', data.token)
         } else {
-          console.log(data.message)
           dispatch(displayError(data))
           dispatch(clearLoading())
         }
       })
+      .catch(console.error)
   }
 }
 
@@ -75,12 +73,10 @@ const authenticatingUser = params => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         if (data.authenticated) {
           dispatch(fetchedUser(data))
           localStorage.setItem('token', data.token)
         } else {
-          console.log(data)
           dispatch(displayError(data.message))
           dispatch(clearLoading())
         }
@@ -109,7 +105,6 @@ const updatingUser = (user, id) => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         dispatch(updateUser(data))
       })
   }
