@@ -7,11 +7,11 @@ import { Icon } from "semantic-ui-react";
 import { formatReminderToast } from "./helper/functions";
 import Footer from "./components/Footer";
 import { Routes } from "./Routes";
-
-type State = { reminders: any; notifications: any; contacts: any; loading: boolean };
+import { Reminder } from "./_models/Reminder.model";
+import { ReduxState } from "./redux/types";
 
 export default function App() {
-  const { reminders, contacts, loading } = useSelector((state: State) => state);
+  const { reminders, contacts, loading } = useSelector((state: ReduxState) => state);
   const dispatch = useDispatch();
   useEffect(loginUser, []);
   useEffect(sendReminderNotifications, [reminders]);
@@ -19,19 +19,21 @@ export default function App() {
   function loginUser() {
     dispatch(testAction());
     const token = localStorage.getItem("token");
-    token ? dispatch(fetchingUser(token)) : dispatch(clearLoading());
+    token ? dispatch(fetchingUser()) : dispatch(clearLoading());
   }
 
   function sendReminderNotifications() {
-    reminders.forEach((r: any) => {
-      if (r.match && !r.notified && !r.snoozed) {
-        alerts(r);
-        dispatch(notifyReminders(r));
-      }
-    });
+    reminders.forEach(sendReminderNotification);
   }
 
-  function alerts(reminder: any) {
+  function sendReminderNotification(reminder: Reminder) {
+    if (reminder.match && !reminder.notified && !reminder.snoozed) {
+      alerts(reminder);
+      dispatch(notifyReminders(reminder));
+    }
+  }
+
+  function alerts(reminder: Reminder): void | null {
     return reminder.match ? console.log(formatReminderToast(reminder, contacts)) : null;
   }
 
