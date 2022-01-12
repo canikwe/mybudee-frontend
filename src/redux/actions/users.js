@@ -62,7 +62,8 @@ const addingUser = (user) => {
           dispatch(displayError(data));
           dispatch(clearLoading());
         }
-      });
+      })
+      .catch(console.error);
   };
 };
 
@@ -79,12 +80,10 @@ const authenticatingUser = (params) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (data.authenticated) {
           dispatch(fetchedUser(data));
           localStorage.setItem("token", data.token);
         } else {
-          console.log(data);
           dispatch(displayError(data.message));
           dispatch(clearLoading());
         }
@@ -113,7 +112,6 @@ const updatingUser = (user, id) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         dispatch(updateUser(data));
       });
   };
@@ -123,12 +121,4 @@ const logoutUser = () => {
   return { type: LOGOUT_USER };
 };
 
-export {
-  logoutUser,
-  updatingUser,
-  clearError,
-  authenticatingUser,
-  addingUser,
-  fetchingUser,
-  clearLoading,
-};
+export { logoutUser, updatingUser, clearError, authenticatingUser, addingUser, fetchingUser, clearLoading };
