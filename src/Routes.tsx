@@ -14,71 +14,62 @@ import { User } from "./components/UserForm/user.type";
 
 type State = { user: User; reminders: any; notifications: any; contacts: any; loading: boolean };
 
+enum Paths {
+  CALENDAR = "/calendar",
+  EDIT_PROFILE = "/profile/edit",
+  FRIEND_DETAILS = "/friends/:id",
+  FRIENDS = "/friends",
+  HOME = "/home",
+  LOGIN = "/login",
+  NEW_CONTACT = "/contacts/new",
+  ROOT = "/",
+  SIGN_UP = "/signup",
+}
+
 export function Routes() {
   const { user, reminders, contacts } = useSelector((state: State) => state);
 
   return (
     <main className="main-content">
       <Switch>
+        <Route exact path={Paths.ROOT} render={() => (isEmpty(user) ? <Redirect to={Paths.LOGIN} /> : <Homepage />)} />
+        <Route exact path={Paths.LOGIN} render={() => (isEmpty(user) ? <Login /> : <Redirect to={Paths.ROOT} />)} />
         <Route
           exact
-          path="/"
-          render={() => {
-            return isEmpty(user) ? <Redirect to="/login" /> : <Homepage />;
-          }}
+          path={Paths.NEW_CONTACT}
+          render={() => (!isEmpty(user) ? <ContactForm /> : <Redirect to={Paths.LOGIN} />)}
+        />
+        <Route
+          exact
+          path={Paths.SIGN_UP}
+          render={(routeProps) =>
+            isEmpty(user) ? <UserForm title="Sign Up Here" {...routeProps} /> : <Redirect to={Paths.ROOT} />
+          }
         />
 
         <Route
           exact
-          path="/login"
-          render={() => {
-            return isEmpty(user) ? <Login /> : <Redirect to="/" />;
-          }}
+          path={Paths.EDIT_PROFILE}
+          render={(routeProps) =>
+            !isEmpty(user) ? <UserForm title="Account Settings" {...routeProps} /> : <Redirect to={Paths.LOGIN} />
+          }
         />
 
         <Route
           exact
-          path="/contacts/new"
-          render={() => {
-            return !isEmpty(user) ? <ContactForm /> : <Redirect to="/login" />;
-          }}
+          path={Paths.CALENDAR}
+          render={() => (!isEmpty(user) ? <Calendar /> : <Redirect to={Paths.LOGIN} />)}
         />
 
         <Route
           exact
-          path="/signup"
-          render={(routeProps) => {
-            return isEmpty(user) ? <UserForm title="Sign Up Here" {...routeProps} /> : <Redirect to="/" />;
-          }}
+          path={Paths.FRIENDS}
+          render={() => (!isEmpty(user) ? <ContactCardContainer /> : <Redirect to={Paths.LOGIN} />)}
         />
 
         <Route
           exact
-          path="/profile/edit"
-          render={(routeProps) => {
-            return !isEmpty(user) ? <UserForm title="Account Settings" {...routeProps} /> : <Redirect to="/login" />;
-          }}
-        />
-
-        <Route
-          exact
-          path="/calendar"
-          render={() => {
-            return !isEmpty(user) ? <Calendar /> : <Redirect to="/login" />;
-          }}
-        />
-
-        <Route
-          exact
-          path="/friends"
-          render={() => {
-            return !isEmpty(user) ? <ContactCardContainer /> : <Redirect to="/login" />;
-          }}
-        />
-
-        <Route
-          exact
-          path="/friends/:id"
+          path={Paths.FRIEND_DETAILS}
           render={(props) => {
             const friendId = parseInt(props.match.params.id);
             const friend = contacts.find((c: any) => c.id === friendId);
@@ -89,14 +80,12 @@ export function Routes() {
                 <ContactShow contact={friend} reminders={filteredReminders} />
               </div>
             ) : (
-              <Redirect to="/login" />
+              <Redirect to={Paths.LOGIN} />
             );
           }}
         />
-
-        <Route exact path="/home" component={Home} />
-
-        <Redirect from="*" to="/" />
+        <Route exact path={Paths.HOME} component={Home} />
+        <Redirect from="*" to={Paths.ROOT} />
       </Switch>
     </main>
   );

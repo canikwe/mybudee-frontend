@@ -13,25 +13,27 @@ type State = { reminders: any; notifications: any; contacts: any; loading: boole
 export default function App() {
   const { reminders, contacts, loading } = useSelector((state: State) => state);
   const dispatch = useDispatch();
+  useEffect(loginUser, []);
+  useEffect(sendReminderNotifications, [reminders]);
 
-  useEffect(() => {
+  function loginUser() {
     dispatch(testAction());
     const token = localStorage.getItem("token");
     token ? dispatch(fetchingUser(token)) : dispatch(clearLoading());
-  }, []);
+  }
 
-  useEffect(() => {
+  function sendReminderNotifications() {
     reminders.forEach((r: any) => {
       if (r.match && !r.notified && !r.snoozed) {
         alerts(r);
         dispatch(notifyReminders(r));
       }
     });
-  }, [reminders]);
+  }
 
-  const alerts = (reminder: any) => {
+  function alerts(reminder: any) {
     return reminder.match ? console.log(formatReminderToast(reminder, contacts)) : null;
-  };
+  }
 
   if (loading) {
     return (
