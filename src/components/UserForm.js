@@ -1,175 +1,101 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { addingUser, updatingUser } from '../redux/actions'
-import { Segment, Grid, Button } from 'semantic-ui-react'
-// import { isEmpty } from 'lodash'
-// import toast from 'toasted-notes'
-import 'toasted-notes/src/styles.css';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addingUser, updatingUser } from "../redux/actions";
+import { Segment, Grid, Button } from "semantic-ui-react";
+import { isEmpty, pick } from "lodash";
 
-class UserForm extends React.Component {
-  constructor(){
-    super()
-    this.state = {
-      id: '',
-      avatar: 'https://ayogo.com/wp-content/uploads/2015/06/jp-avatar-placeholder.png',
-      bio: '',
-      first_name: '',
-      last_name: '',
-      email: '',
-      username: '',
-      password: '',
-      // password_confirm: '',
-      splash_image: ''
+function UserForm({ title, history }) {
+  /** State + Actions */
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [form, setFormState] = useState({});
+
+  /** Lifecycle Hooks */
+  useEffect(() => {
+    if (!isEmpty(user)) {
+      const userForForm = pick(user, ["id", "avatar", "bio", "first_name", "last_name", "emai", "username", "email"]);
+      setFormState({ ...userForForm, splash_image: user.splash_image || "" });
     }
-  }
+  }, [user]);
 
-  componentDidMount() {
-    if (this.props.user.id) {
-      const { id, avatar, bio, first_name, last_name, email, username, splash_image } = this.props.user
-      this.setState({ id, avatar, bio, first_name, last_name, email, username, splash_image })
-    }
-  }
+  /** Form Handlers */
+  const handleChange = (e) => {
+    const value = e.target.name !== "photo" ? e.target.value : e.target.files[0];
+    setFormState({ ...form, [e.target.name]: value });
+  };
 
-  // componentDidUpdate() {
-  //   if (this.props.notifications.length >= 1 || !isEmpty(this.props.notifications)) {
-  //     if (this.props.notifications.status !== 500) {
-  //       console.log(isEmpty(this.props.notifications.message))
-  //       this.props.notifications.message.forEach(e => toast.notify(e, {duration: null}))
-  //       this.props.clearError()
-  //     } else {
-  //       toast.notify(this.props.notifications.error, {duration: null})
-  //       this.props.clearError()
-  //     }
-  //   }
-  // }
+  const handleSubmit = () => {
+    user.id ? dispatch(updatingUser(form, user.id)) : dispatch(addingUser(form));
+    history.push("/");
+  };
 
-  handleChange = e => {
-    if (e.target.name !== 'photo'){
-      this.setState({
-        [e.target.name]: e.target.value
-      })
-    } else {
-      this.setState({
-        [e.target.name]: e.target.files[0]
-      })
-    }
-  }
-
-  handleSubmit = () => {
-
-    const formObj = {...this.state}
-    
-    if (this.props.user.id) {
-      this.props.updatingUser(formObj, this.state.id)
-    } else {
-      this.props.addingUser(formObj)
-    }
-
-    this.props.history.push('/')
-    this.resetState()
-  }
-
-  resetState = () => {
-    this.setState({
-      avatar: 'https://ayogo.com/wp-content/uploads/2015/06/jp-avatar-placeholder.png',
-      bio: '',
-      first_name: '',
-      last_name: '',
-      email: '',
-      username: '',
-      password: ''
-    })
-  }
-
-  render(){
-    console.log(this.props)
-    const { avatar, bio, first_name, last_name, email, username, password, splash_image } = this.state
-    return(
-      <div className='wrapper'>
-        <h2>{this.props.title}</h2>
-
+  return (
+    <div className="wrapper">
+      <h2>{title}</h2>
+      <form>
         <Segment raised>
           <Grid columns={2}>
-          <Grid.Column>
+            <Grid.Column>
+              <div className="ui form">
+                <Segment compact>
+                  <img className="ui small image" src={form.avatar || ""} alt="user_avatar" />
+                </Segment>
+                <label htmlFor="avatar">Avatar: </label>
+                <br />
+                <input type="text" name="avatar" value={form.avatar || ""} onChange={handleChange}></input>
+                <br />
+                {form.splash_image && (
+                  <Segment>
+                    <img className="ui img-splash" alt="user_splash_img" src={form.splash_image || ""} />
+                  </Segment>
+                )}
 
-
-            <div className="ui form">
-              <Segment compact>
-                <img className='ui small image' src={ avatar } alt='user_avatar'/>
-              </Segment>
-              <label htmlFor='avatar'>Avatar: </label><br />
-              <input type='text' name='avatar' value={ avatar } onChange={this.handleChange}></input><br />
-
-
-              {/* <input type='file' name='splash_image' accept='image/*' onChange={this.handleChange}></input> */}
-              
-              { splash_image !== '' ?
-              <Segment>
-                <img className='ui img-splash' alt='user_splash_img' src={ splash_image } />
-              </Segment> : null }
-
-              <label htmlFor='splash_image'>Splash Image: </label><br />
-              <input type='text' name='splash_image' value={ splash_image } onChange={this.handleChange}></input><br />
-              
-            </div>
+                <label htmlFor="splash_image">Splash Image: </label>
+                <br />
+                <input type="text" name="splash_image" value={form.splash_image || ""} onChange={handleChange}></input>
+                <br />
+              </div>
             </Grid.Column>
 
             <Grid.Column>
+              <div className="ui form">
+                <label htmlFor="first_name">First Name: </label>
+                <input type="text" name="first_name" value={form.first_name || ""} onChange={handleChange}></input>
+                <br />
 
-            <div className='ui form'>
-            <label htmlFor='first_name'>First Name: </label>
-            <input type='text' name='first_name' value={ first_name } onChange={this.handleChange}></input><br />
-    
-            <label htmlFor='last_name'>Last Name: </label>
-            <input type='text' name='last_name' value={ last_name } onChange={this.handleChange}></input><br />
-    
-            <label htmlFor='username'>Username: </label>
-            <input type='text' name='username' value={ username } onChange={this.handleChange}></input><br />
-            
-            <label htmlFor='email'>Email: </label>
-            <input type='text' name='email' value={ email } onChange={this.handleChange}></input><br />
+                <label htmlFor="last_name">Last Name: </label>
+                <input type="text" name="last_name" value={form.last_name || ""} onChange={handleChange}></input>
+                <br />
 
-    
-            <label htmlFor='password'>Password: </label>
-            <input type='password' name='password' value={ password } onChange={this.handleChange}></input><br />
-  {/*           
-            <label htmlFor='password_confirm'>Password Confirmation: </label>
-            <input type='password' name='password_confirm' value={ password_confirm } onChange={this.handleChange}></input><br /> */}
+                <label htmlFor="username">Username: </label>
+                <input type="text" name="username" value={form.username || ""} onChange={handleChange}></input>
+                <br />
 
-            <label htmlFor='bio'>Bio:</label><br />
-            <textarea name='bio' rows='6' value={ bio } onChange={this.handleChange}></textarea><p />
-  {/* 
-            <label htmlFor='photo'>Photo:</label><br />
-            <input type='file' name='photo' onChange={this.handleChange}/>  */}
+                <label htmlFor="email">Email: </label>
+                <input type="text" name="email" value={form.email || ""} onChange={handleChange}></input>
+                <br />
 
-    
-            <Button onClick={this.handleSubmit} >Submit</Button>
-            </div>
-          </Grid.Column>
+                {isEmpty(user) && (
+                  <>
+                    <label htmlFor="password">Password: </label>
+                    <input type="password" name="password" value={form.password || ""} onChange={handleChange}></input>
+                    <br />
+                  </>
+                )}
+
+                <label htmlFor="bio">Bio:</label>
+                <br />
+                <textarea name="bio" rows="6" value={form.bio || ""} onChange={handleChange}></textarea>
+                <p />
+
+                <Button onClick={handleSubmit}>Submit</Button>
+              </div>
+            </Grid.Column>
           </Grid>
-          {/* {this.displayAlert()} */}
-          <img alt='user-profile-pic' src={`http://localhost:3000${this.props.user.photo}`} />
-
         </Segment>
-      </div>
-    )
-
-  }
-
+      </form>
+    </div>
+  );
 }
 
-const mapStateToProps = state => {
-  return {
-    user: state.user,
-    notifications: state.notifications
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    addingUser: (contact) => dispatch(addingUser(contact)),
-    updatingUser: (user, id) => dispatch(updatingUser(user, id))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserForm)
+export default UserForm;
