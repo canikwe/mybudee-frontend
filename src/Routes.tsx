@@ -10,9 +10,7 @@ import Home from "./containers/Home";
 import Homepage from "./containers/Homepage";
 import { isEmpty } from "lodash";
 import { useSelector } from "react-redux";
-import { User } from "./components/UserForm/user.type";
-
-type State = { user: User; reminders: any; notifications: any; contacts: any; loading: boolean };
+import { ReduxState } from "./redux/types";
 
 enum Paths {
   CALENDAR = "/calendar",
@@ -27,7 +25,7 @@ enum Paths {
 }
 
 export function Routes() {
-  const { user, reminders, contacts } = useSelector((state: State) => state);
+  const { user, reminders, contacts } = useSelector((state: ReduxState) => state);
 
   return (
     <main className="main-content">

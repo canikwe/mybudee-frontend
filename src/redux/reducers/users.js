@@ -7,7 +7,7 @@ import {
   CLEAR_ERROR,
   LOGOUT_USER,
   CLEAR_LOADING,
-} from "../types";
+} from "../types.ts";
 
 const userReducer = (state = {}, action) => {
   switch (action.type) {

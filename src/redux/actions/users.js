@@ -6,8 +6,10 @@ import {
   CLEAR_ERROR,
   LOGOUT_USER,
   CLEAR_LOADING,
-} from "../types";
-import { authHeaders, BASE_URL } from "../types";
+  authHeaders,
+  BASE_URL,
+} from "../types.ts";
+import { appFetch } from "../../helper/fetch";
 
 //Initial User Fetch, loading into state, and error handling
 const fetchedUser = (payload) => {
@@ -26,21 +28,17 @@ const displayError = (errors) => {
   return { type: THROW_ERROR, errors };
 };
 
-const fetchingUser = (token) => {
+const fetchingUser = () => {
   return (dispatch) => {
     dispatch(loadingUser);
 
-    fetch(`${BASE_URL()}/profile`, {
-      headers: authHeaders(),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.user.id !== undefined) {
-          dispatch(fetchedUser(data));
-        } else {
-          dispatch(clearLoading());
-        }
-      });
+    appFetch("profile", (data) => {
+      if (data.user.id !== undefined) {
+        dispatch(fetchedUser(data));
+      } else {
+        dispatch(clearLoading());
+      }
+    });
   };
 };
 

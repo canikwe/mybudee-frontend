@@ -1,77 +1,77 @@
-import { ADD_REMINDER, UPDATE_REMINDER, DELETE_REMINDER, NOTIFY_REMINDERS, SET_PRIORITY_FILTER, SET_FEATURED_REMINDER } from '../types'
-import { authHeaders, BASE_URL } from '../types'
+import {
+  ADD_REMINDER,
+  UPDATE_REMINDER,
+  DELETE_REMINDER,
+  NOTIFY_REMINDERS,
+  SET_PRIORITY_FILTER,
+  SET_FEATURED_REMINDER,
+  authHeaders,
+  BASE_URL,
+} from "../types.ts";
 
-const addingReminder = newReminderData => {
+const addingReminder = (newReminderData) => {
   return (dispatch) => {
-    
     fetch(`${BASE_URL()}/reminders`, {
-      method: 'POST',
+      method: "POST",
       headers: authHeaders(),
-      body: JSON.stringify(newReminderData)
+      body: JSON.stringify(newReminderData),
     })
-    .then(res => res.json())
-    .then(newReminderObject => dispatch(addReminder(newReminderObject)))
-  }
-}
+      .then((res) => res.json())
+      .then((newReminderObject) => dispatch(addReminder(newReminderObject)));
+  };
+};
 
-const notifyReminders = reminder => {
-  return {type: NOTIFY_REMINDERS, reminder}
-}
+const notifyReminders = (reminder) => {
+  return { type: NOTIFY_REMINDERS, reminder };
+};
 
-const addReminder = newReminderObj => {
-  return {type: ADD_REMINDER, reminder: newReminderObj}
-}
+const addReminder = (newReminderObj) => {
+  return { type: ADD_REMINDER, reminder: newReminderObj };
+};
 
-const updateReminder = reminderObj => {
-  return {type: UPDATE_REMINDER, reminder: reminderObj}
-}
+const updateReminder = (reminderObj) => {
+  return { type: UPDATE_REMINDER, reminder: reminderObj };
+};
 
-const updatingReminder = reminder => {
+const updatingReminder = (reminder) => {
   return (dispatch) => {
     fetch(`${BASE_URL()}/reminders/${reminder.id}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: authHeaders(),
-      body: JSON.stringify(reminder)
+      body: JSON.stringify(reminder),
     })
-    .then(res => res.json())
-    .then(reminderObj => {
-      console.log(reminderObj)
-      dispatch(updateReminder(reminderObj))
-    })
-  }
-}
+      .then((res) => res.json())
+      .then((reminderObj) => {
+        console.log(reminderObj);
+        dispatch(updateReminder(reminderObj));
+      });
+  };
+};
 
-const deleteReminder = reminderObj => {
-  return {type: DELETE_REMINDER, reminder: reminderObj}
-}
+const deleteReminder = (reminderObj) => {
+  return { type: DELETE_REMINDER, reminder: reminderObj };
+};
 
-const deletingReminder = reminder => {
+const deletingReminder = (reminder) => {
   return (dispatch) => {
     fetch(`${BASE_URL()}/reminders/${reminder.id}`, {
       method: "DELETE",
-      headers: authHeaders()
+      headers: authHeaders(),
     })
-    .then(res => res.json())
-    .then(reminderObj => {
-      console.log(reminderObj)
-      dispatch(deleteReminder(reminderObj))
-    })
-  }
-}
+      .then((res) => res.json())
+      .then((reminderObj) => {
+        console.log(reminderObj);
+        dispatch(deleteReminder(reminderObj));
+      });
+  };
+};
 
-const filterCalendar = term => {
-  return { type: SET_PRIORITY_FILTER, term }
-}
+const filterCalendar = (term) => {
+  return { type: SET_PRIORITY_FILTER, term };
+};
 
-const setFeaturedReminder = reminder => {
-  return { type: SET_FEATURED_REMINDER, reminder }
-}
+const setFeaturedReminder = (reminder) => {
+  return { type: SET_FEATURED_REMINDER, reminder };
+};
 
-export {
-  addingReminder,
-  notifyReminders,
-  updatingReminder,
-  deletingReminder,
-  filterCalendar,
-  setFeaturedReminder
-}
+export { addingReminder, notifyReminders, updatingReminder, deletingReminder, filterCalendar, setFeaturedReminder };

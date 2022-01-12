@@ -1,11 +1,26 @@
-import { TESTING_REDUCER } from '../types'
-import { addingContact, deletingContact, updatingContact, updateSearchTerm } from './contacts'
-import { addingReminder, notifyReminders, updatingReminder, deletingReminder, filterCalendar, setFeaturedReminder } from './reminders'
-import { logoutUser, updatingUser, clearError, authenticatingUser, addingUser, fetchingUser, clearLoading } from './users'
-import { creatingEncounter, deletingEncounter } from './encounters'
+import { TESTING_REDUCER } from "../types.ts";
+import { addingContact, deletingContact, updatingContact, updateSearchTerm } from "./contacts";
+import {
+  addingReminder,
+  notifyReminders,
+  updatingReminder,
+  deletingReminder,
+  filterCalendar,
+  setFeaturedReminder,
+} from "./reminders";
+import {
+  logoutUser,
+  updatingUser,
+  clearError,
+  authenticatingUser,
+  addingUser,
+  fetchingUser,
+  clearLoading,
+} from "./users";
+import { creatingEncounter, deletingEncounter } from "./encounters";
 
-function testAction(){
-  return {type: TESTING_REDUCER}
+function testAction() {
+  return { type: TESTING_REDUCER };
 }
 
 export {
@@ -28,5 +43,5 @@ export {
   filterCalendar,
   creatingEncounter,
   setFeaturedReminder,
-  deletingEncounter
-}
+  deletingEncounter,
+};
