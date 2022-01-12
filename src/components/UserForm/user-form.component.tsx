@@ -1,27 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, SyntheticEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addingUser, updatingUser } from "../redux/actions";
+import { addingUser, updatingUser } from "../../redux/actions";
 import { Segment, Grid, Button } from "semantic-ui-react";
 import { isEmpty, pick } from "lodash";
+import { RouteComponentProps } from "react-router";
+import { User } from "./User.type";
 
-function UserForm({ title, history }) {
+type Props = { title: string } & RouteComponentProps;
+
+function UserForm({ title, history }: Props) {
   /** State + Actions */
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state: { user: User }) => state.user);
   const dispatch = useDispatch();
-  const [form, setFormState] = useState({});
+  const [form, setFormState]: [Partial<User>, any] = useState({});
 
   /** Lifecycle Hooks */
   useEffect(() => {
     if (!isEmpty(user)) {
-      const userForForm = pick(user, ["id", "avatar", "bio", "first_name", "last_name", "emai", "username", "email"]);
+      const userForForm = pick(user, ["id", "avatar", "bio", "first_name", "last_name", "username", "email"]);
       setFormState({ ...userForForm, splash_image: user.splash_image || "" });
     }
   }, [user]);
 
   /** Form Handlers */
-  const handleChange = (e) => {
-    const value = e.target.name !== "photo" ? e.target.value : e.target.files[0];
-    setFormState({ ...form, [e.target.name]: value });
+  const handleChange = (e: SyntheticEvent<HTMLElement>) => {
+    const target = e.target as HTMLFormElement;
+    const value = target.name !== "photo" ? target.value : target.files[0];
+    setFormState({ ...form, [target.name]: value });
   };
 
   const handleSubmit = () => {
@@ -85,7 +90,7 @@ function UserForm({ title, history }) {
 
                 <label htmlFor="bio">Bio:</label>
                 <br />
-                <textarea name="bio" rows="6" value={form.bio || ""} onChange={handleChange}></textarea>
+                <textarea name="bio" rows={6} value={form.bio || ""} onChange={handleChange}></textarea>
                 <p />
 
                 <Button onClick={handleSubmit}>Submit</Button>

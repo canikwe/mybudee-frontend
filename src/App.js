@@ -15,7 +15,7 @@ import Home from "./containers/Home";
 import { formatReminderToast } from "./helper/functions";
 import Footer from "./components/Footer";
 import ContactShow from "./components/ContactShow";
-import UserForm from "./components/UserForm";
+import UserForm from "./components/UserForm/user-form.component.tsx";
 
 class App extends Component {
   componentDidMount() {
