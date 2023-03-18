@@ -6,7 +6,7 @@ import NavBar from "./components/NavBar";
 import { Icon } from "semantic-ui-react";
 import { formatReminderToast } from "./helper/functions";
 import Footer from "./components/Footer";
-import { Routes } from "./Routes";
+import { Routes } from "./routes/Routes";
 
 type State = { reminders: any; notifications: any; contacts: any; loading: boolean };
 

@@ -1,16 +1,16 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import Calendar from "./components/Calendar";
-import ContactForm from "./components/ContactForm";
-import ContactShow from "./components/ContactShow";
-import Login from "./components/Login";
-import UserForm from "./components/UserForm/user-form.component";
-import ContactCardContainer from "./containers/ContactCardContainer";
-import Home from "./containers/Home";
-import Homepage from "./containers/Homepage";
+import Calendar from "../components/Calendar";
+import ContactForm from "../components/ContactForm";
+import ContactShow from "../components/ContactShow";
+import Login from "../components/Login";
+import UserForm from "../components/UserForm/user-form.component";
+import ContactCardContainer from "../containers/ContactCardContainer";
+import Home from "../containers/Home";
 import { isEmpty } from "lodash";
 import { useSelector } from "react-redux";
-import { User } from "./components/UserForm/user.type";
+import { User } from "../components/UserForm/user.type";
+import Homepage from "../containers/Homepage";
 
 type State = { user: User; reminders: any; notifications: any; contacts: any; loading: boolean };
 
