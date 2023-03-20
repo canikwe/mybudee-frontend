@@ -1,32 +1,29 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { deletingContact, deletingReminder } from '../redux/actions'
-import { Card, Icon, Image, Label } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import moment from 'moment'
+import React from "react";
+import { connect } from "react-redux";
+import { deletingContact, deletingReminder } from "../redux/actions";
+import { Card, Icon, Image, Label } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import moment from "moment";
 
 class ContactCard extends React.Component {
-
   contactReminders = () => {
-    return this.props.reminders.filter(r => r.contact_id === this.props.contact.id)
-  }
+    return this.props.reminders.filter((r) => r.contact_id === this.props.contact.id);
+  };
 
   render() {
     return (
       <React.Fragment>
-        <Card as={Link} to={`/friends/${this.props.contact.id}`} className='contact-card'>
+        <Card as={Link} to={`/friends/${this.props.contact.id}`} className="contact-card">
           <Card.Content>
-            <Image floated='right' size='mini' src={this.props.contact.avatar} />
+            <Image floated="right" size="mini" src={this.props.contact.avatar} />
             <Card.Header>{this.props.contact.name}</Card.Header>
             <Card.Meta>
-              <span className='date'>Connected {moment(this.props.contact.created_at).fromNow()}</span>
+              <span className="date">Connected {moment(this.props.contact.created_at).fromNow()}</span>
             </Card.Meta>
             <Card.Description>
-              <Label size='tiny'>
-                {this.props.contact.kind}
-              </Label>
+              <Label size="tiny">{this.props.contact.kind}</Label>
             </Card.Description>
-          {/* <Menu fluid text vertical className='scrolled'>
+            {/* <Menu fluid text vertical className='scrolled'>
             {this.props.reminders.filter(r => r.contact_id === this.props.contact.id).map(r => {
               return (
                 <Dropdown key={r.id} text={r.msg} pointing='left' className='link item'>
@@ -41,30 +38,30 @@ class ContactCard extends React.Component {
           </Menu> */}
           </Card.Content>
           <Card.Content extra>
-            <Icon name='bell' />
+            <Icon name="bell" />
             {this.contactReminders().length} Reminder(s)
             <br />
-            <Icon name='comments outline' />
+            <Icon name="comments outline" />
             {this.props.contact.encounters.length} Meetings(s)
           </Card.Content>
         </Card>
       </React.Fragment>
-    )
+    );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user_id: state.user.id,
-    reminders: state.reminders
-  }
-}
+    reminders: state.reminders,
+  };
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     deletingContact: (contact) => dispatch(deletingContact(contact)),
-    deletingReminder: (reminder) => dispatch(deletingReminder(reminder))
-  }
-}
+    deletingReminder: (reminder) => dispatch(deletingReminder(reminder)),
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactCard)
+export default connect(mapStateToProps, mapDispatchToProps)(ContactCard);

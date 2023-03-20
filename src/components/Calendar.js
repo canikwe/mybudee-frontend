@@ -1,141 +1,140 @@
-import React, { PureComponent } from 'react'
-import BigCalendar from 'react-big-calendar'
-import moment from 'moment'
-import { connect } from 'react-redux'
-import ReminderForm from '../components/ReminderForm'
-import ReminderShow from '../components/ReminderShow'
-import { Modal, Button, Segment } from 'semantic-ui-react'
-import { deletingReminder } from '../redux/actions'
-import DeleteConfirmation from './DeleteConfirmation';
-import 'react-big-calendar/lib/css/react-big-calendar.css'
-import Filter from './Filter'
-import { formatReminderToast } from '../helper/functions'
+import React, { PureComponent } from "react";
+import BigCalendar from "react-big-calendar";
+import moment from "moment";
+import { connect } from "react-redux";
+import ReminderForm from "./ReminderForm";
+import ReminderShow from "./ReminderShow";
+import { Modal, Button, Segment } from "semantic-ui-react";
+import { deletingReminder } from "../redux/actions";
+import DeleteConfirmation from "./DeleteConfirmation";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import Filter from "./Filter";
+import { formatReminderToast } from "../helper/functions";
 
-const localizer = BigCalendar.momentLocalizer(moment)
+const localizer = BigCalendar.momentLocalizer(moment);
 
 class Calendar extends PureComponent {
   constructor() {
-    super()
+    super();
     this.state = {
       modalOpen: false,
       featuredEvent: {},
       editForm: false,
       // deleteConfirmation: false
-    }
+    };
   }
 
-  handleOpen = (event) => this.setState({modalOpen: true, featuredEvent: event})
-  handleClose = () => this.setState({modalOpen: false, editForm: false, deleteConfirmation: false})
-  toggleEditForm = () => this.setState({editForm: !this.state.editForm})
+  handleOpen = (event) => this.setState({ modalOpen: true, featuredEvent: event });
+  handleClose = () => this.setState({ modalOpen: false, editForm: false, deleteConfirmation: false });
+  toggleEditForm = () => this.setState({ editForm: !this.state.editForm });
   // openDeleteConfirmation = () => this.setState({deleteConfirmation: true})
-  closeDeleteConfirmation = () => this.setState({deleteConfirmation: false, editForm: false, modalOpen: false})
+  closeDeleteConfirmation = () => this.setState({ deleteConfirmation: false, editForm: false, modalOpen: false });
 
   eventStyleGetter = (e, start, end, isSelected) => {
     let style = {
-      backgroundColor: 'unset',
-      borderRadius: '0px',
+      backgroundColor: "unset",
+      borderRadius: "0px",
       opacity: 0.8,
-      color: 'black',
-      border: '0px',
-      display: 'block',
-      margin: '1px'
-    }
+      color: "black",
+      border: "0px",
+      display: "block",
+      margin: "1px",
+    };
 
-    switch (e.priority){
+    switch (e.priority) {
       case 1:
-        return {style: {...style, color: 'red'}}
+        return { style: { ...style, color: "red" } };
       case 2:
-        return {style: {...style, color: 'orange'}}
+        return { style: { ...style, color: "orange" } };
       case 3:
-        return {style: {...style, color: 'blue'}}
-      case 4: 
-        return {style: {...style, color: 'grey'}}
+        return { style: { ...style, color: "blue" } };
+      case 4:
+        return { style: { ...style, color: "grey" } };
       default:
-        return {style: {...style, color: 'blue'}}
+        return { style: { ...style, color: "blue" } };
     }
-  }
+  };
 
   filterReminders = () => {
-    const filteredReminders =  this.props.recurringReminders.filter(r => this.props.calendarFilter === '' ? r : r.priority === this.props.calendarFilter)
-    return filteredReminders.map(r => ({...r, full_msg: formatReminderToast(r, this.props.contacts)}))
-  }
+    const filteredReminders = this.props.recurringReminders.filter((r) =>
+      this.props.calendarFilter === "" ? r : r.priority === this.props.calendarFilter
+    );
+    return filteredReminders.map((r) => ({ ...r, full_msg: formatReminderToast(r, this.props.contacts) }));
+  };
 
   render() {
     if (this.props.loading) {
-      return <h1>Loading...</h1>
+      return <h1>Loading...</h1>;
     } else {
       return (
-        <div className='wrapper calendar'>
-          <div className='calendar-header'>
+        <div className="wrapper calendar">
+          <div className="calendar-header">
             <h1>Calendar</h1>
-            <p><Filter /></p>
+            <p>
+              <Filter />
+            </p>
           </div>
 
           <BigCalendar
             localizer={localizer}
-            events={ this.filterReminders() }
-            startAccessor='start'
-            endAccessor='start'
-            titleAccessor='full_msg'
-            defaultView='month'
-            views={['month', 'day', 'week']}
-            alldayaccessor='all_day'
+            events={this.filterReminders()}
+            startAccessor="start"
+            endAccessor="start"
+            titleAccessor="full_msg"
+            defaultView="month"
+            views={["month", "day", "week"]}
+            alldayaccessor="all_day"
             popup
             selectable
-            onSelectEvent={(event, e) => {this.handleOpen(event)}}
-            eventPropGetter={(this.eventStyleGetter)}
+            onSelectEvent={(event, e) => {
+              this.handleOpen(event);
+            }}
+            eventPropGetter={this.eventStyleGetter}
           />
 
-        <Modal
-          open={this.state.modalOpen}
-          onClose={() => {
-            this.toggleEditForm()
-            this.handleClose()
-          }} 
-          size='small'
-        >
-        {!this.state.editForm ? 
-        <Segment>
-          <ReminderShow
-            reminder={this.state.featuredEvent}
-            handleClose={this.handleClose}
-          />
-          <Button content='Edit Reminder' onClick={this.toggleEditForm}/> 
-          <DeleteConfirmation reminder={this.state.featuredEvent} handleClose={this.closeDeleteConfirmation}/>
-        </Segment>
-        :
-        <ReminderForm 
-          contact={null} 
-          title={'Update reminder!'} 
-          reminder={this.state.featuredEvent} 
-          handleClose={this.handleClose}
-        />
-      }
-      </Modal>
-
+          <Modal
+            open={this.state.modalOpen}
+            onClose={() => {
+              this.toggleEditForm();
+              this.handleClose();
+            }}
+            size="small"
+          >
+            {!this.state.editForm ? (
+              <Segment>
+                <ReminderShow reminder={this.state.featuredEvent} handleClose={this.handleClose} />
+                <Button content="Edit Reminder" onClick={this.toggleEditForm} />
+                <DeleteConfirmation reminder={this.state.featuredEvent} handleClose={this.closeDeleteConfirmation} />
+              </Segment>
+            ) : (
+              <ReminderForm
+                contact={null}
+                title={"Update reminder!"}
+                reminder={this.state.featuredEvent}
+                handleClose={this.handleClose}
+              />
+            )}
+          </Modal>
         </div>
-      )
+      );
     }
-
   }
 }
 
-
-
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     reminders: state.reminders,
     loading: state.loading,
     recurringReminders: state.recurringReminders,
     calendarFilter: state.calendarFilter,
-    contacts: state.contacts
-  }
-}
+    contacts: state.contacts,
+  };
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    deletingReminder: (reminder) => dispatch(deletingReminder(reminder))
-  }
-}
+    deletingReminder: (reminder) => dispatch(deletingReminder(reminder)),
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Calendar)
+export default connect(mapStateToProps, mapDispatchToProps)(Calendar);

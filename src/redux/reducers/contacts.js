@@ -7,7 +7,7 @@ import {
   LOGOUT_USER,
   CREATE_ENCOUNTER,
   DELETE_ENCOUNTER,
-} from "../types.ts";
+} from "../types";
 
 const contactsReducer = (state = [], action) => {
   switch (action.type) {

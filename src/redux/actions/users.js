@@ -8,6 +8,7 @@ import {
   CLEAR_LOADING,
 } from "../types.ts";
 import { appFetch } from "../../helper/fetch";
+import { toast } from "react-toastify";
 
 const fetchingUser = () => {
   return (dispatch) => {
@@ -48,7 +49,7 @@ const authenticatingUser = (params) => {
         dispatch(fetchedUser(data));
         localStorage.setItem("token", data.token);
       } else {
-        dispatch(displayError(data.message));
+        toast(data.message, { type: "error" });
         dispatch(clearLoading());
       }
     });

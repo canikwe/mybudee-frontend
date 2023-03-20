@@ -11,7 +11,7 @@ import {
   NOTIFY_REMINDERS,
   SET_PRIORITY_FILTER,
   SET_FEATURED_REMINDER,
-} from "../types.ts";
+} from "../types";
 
 const getRecurringEvents = (reminder) => {
   let recurrence = {};

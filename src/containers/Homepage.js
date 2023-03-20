@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import Feature from "../components/Feature";
-import ContactPlaceholder from "../components/ContactPlaceholder.tsx";
 import { Grid } from "semantic-ui-react";
+import ContactPlaceholder from "../components/ContactPlaceholder";
+import Feature from "../components/Feature";
 import FeaturedContactCardContainer from "../components/FeaturedContactCardContainer";
 
 const Homepage = (props) => {
