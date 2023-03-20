@@ -15,9 +15,6 @@ const Contact = ({ contact }: Props) => {
   const handleShow = () => setActive(true);
   const handleHide = () => setActive(false);
 
-  // const { active } = this.state;
-  // const { contact } = this.props;
-
   if (contact) {
     return (
       <div>

@@ -1,11 +1,9 @@
 import React from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { authenticatingUser, clearError } from "../../redux/actions";
+import { useDispatch } from "react-redux";
+import { authenticatingUser } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import { Segment, Button, Divider, Grid } from "semantic-ui-react";
-import { isEmpty } from "lodash";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 
 interface FormInput {
   username: string;
@@ -19,7 +17,6 @@ const Login = () => {
     formState: { errors },
   } = useForm<FormInput>();
 
-  // Redux
   const dispatch = useDispatch();
   const onSubmit = (formFields: FormInput) => dispatch(authenticatingUser({ user: formFields }));
 
@@ -69,15 +66,4 @@ const Login = () => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return { error: state.error };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    authenticatingUser: (params) => dispatch(authenticatingUser(params)),
-    clearError: () => dispatch(clearError()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;
