@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Card, Icon, Image, Dimmer } from "semantic-ui-react";
 
 interface Props {
