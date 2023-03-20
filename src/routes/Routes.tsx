@@ -1,16 +1,16 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import Calendar from "./components/Calendar";
-import ContactForm from "./components/ContactForm";
-import ContactShow from "./components/ContactShow";
-import Login from "./components/Login";
-import UserForm from "./components/UserForm/user-form.component";
-import ContactCardContainer from "./containers/ContactCardContainer";
-import Home from "./containers/Home";
-import Homepage from "./containers/Homepage";
+import Calendar from "../components/Calendar";
+import ContactForm from "../components/ContactForm";
+import ContactShow from "../components/ContactShow";
+import Login from "../pages/Login/Login";
+// import UserForm from "../components/UserForm/user-form.component";
+import ContactCardContainer from "../containers/ContactCardContainer";
+import Home from "../containers/Home";
 import { isEmpty } from "lodash";
 import { useSelector } from "react-redux";
-import { User } from "./components/UserForm/user.type";
+import { User } from "../components/UserForm/user.type";
+import Homepage from "../containers/Homepage";
 
 type State = { user: User; reminders: any; notifications: any; contacts: any; loading: boolean };
 
@@ -39,7 +39,7 @@ export function Routes() {
           path={Paths.NEW_CONTACT}
           render={() => (!isEmpty(user) ? <ContactForm /> : <Redirect to={Paths.LOGIN} />)}
         />
-        <Route
+        {/* <Route
           exact
           path={Paths.SIGN_UP}
           render={(routeProps) =>
@@ -53,7 +53,7 @@ export function Routes() {
           render={(routeProps) =>
             !isEmpty(user) ? <UserForm title="Account Settings" {...routeProps} /> : <Redirect to={Paths.LOGIN} />
           }
-        />
+        /> */}
 
         <Route
           exact

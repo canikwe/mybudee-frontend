@@ -1,6 +1,6 @@
-import moment from 'moment'
+import moment from "moment";
 // eslint-disable-next-line
-import recur from 'moment-recur'
+import recur from "moment-recur";
 import {
   FETCHED_USER,
   ADD_REMINDER,
@@ -10,106 +10,111 @@ import {
   LOGOUT_USER,
   NOTIFY_REMINDERS,
   SET_PRIORITY_FILTER,
-  SET_FEATURED_REMINDER
-} from '../types'
+  SET_FEATURED_REMINDER,
+} from "../types";
 
-const getRecurringEvents = reminder => {
-
-  let recurrence = {}
-  const start = moment(reminder.start_date)
-  const end = moment(reminder.end_date)
+const getRecurringEvents = (reminder) => {
+  let recurrence = {};
+  const start = moment(reminder.start_date);
+  const end = moment(reminder.end_date);
   // debugger
   switch (reminder.period) {
-    case 'daily':
-      recurrence = start.recur(end).every(reminder.interval).day()
+    case "daily":
+      recurrence = start.recur(end).every(reminder.interval).day();
 
       // console.log(recurrence.all('L'))
-      return recurrence.all("L").map(r => { return { ...reminder, start: new Date(r), all_day: true } })
+      return recurrence.all("L").map((r) => {
+        return { ...reminder, start: new Date(r), all_day: true };
+      });
 
-    case 'weekly':
-      recurrence = start.recur(end).every(reminder.interval).weeks()
-
-      // console.log(recurrence.all('L'))
-      return recurrence.all("L").map(r => { return { ...reminder, start: new Date(r), all_day: true } })
-    case 'monthly':
-      recurrence = start.recur(end).every(reminder.interval).months()
+    case "weekly":
+      recurrence = start.recur(end).every(reminder.interval).weeks();
 
       // console.log(recurrence.all('L'))
-      return recurrence.all("L").map(r => { return { ...reminder, start: new Date(r), all_day: true } })
-
-    case 'yearly':
-      recurrence = start.recur(end).every(reminder.interval).years()
+      return recurrence.all("L").map((r) => {
+        return { ...reminder, start: new Date(r), all_day: true };
+      });
+    case "monthly":
+      recurrence = start.recur(end).every(reminder.interval).months();
 
       // console.log(recurrence.all('L'))
-      return recurrence.all("L").map(r => { return { ...reminder, start: new Date(r), all_day: true } })
+      return recurrence.all("L").map((r) => {
+        return { ...reminder, start: new Date(r), all_day: true };
+      });
+
+    case "yearly":
+      recurrence = start.recur(end).every(reminder.interval).years();
+
+      // console.log(recurrence.all('L'))
+      return recurrence.all("L").map((r) => {
+        return { ...reminder, start: new Date(r), all_day: true };
+      });
 
     default:
-      return [recurrence]
+      return [recurrence];
   }
-}
-
+};
 
 const remindersReducer = (state = [], action) => {
-
   switch (action.type) {
     case FETCHED_USER:
-      return action.payload.reminders
+      return action.payload.reminders;
     case ADD_REMINDER:
-      return [...state, action.reminder]
+      return [...state, action.reminder];
     case UPDATE_REMINDER:
-      return state.map(r => r.id === action.reminder.id ? action.reminder : r)
+      return state.map((r) => (r.id === action.reminder.id ? action.reminder : r));
     case NOTIFY_REMINDERS:
-      return state.map(r => r.id === action.reminder.id ? { ...r, notified: true } : r)
+      return state.map((r) => (r.id === action.reminder.id ? { ...r, notified: true } : r));
     case DELETE_REMINDER:
-      return state.filter(r => r.id !== action.reminder.id)
+      return state.filter((r) => r.id !== action.reminder.id);
     case DELETE_CONTACT:
-      return state.filter(r => r.contact_id !== action.contact.id)
+      return state.filter((r) => r.contact_id !== action.contact.id);
     case LOGOUT_USER:
-      return []
+      return [];
     default:
-      return state
+      return state;
   }
-}
-
+};
 
 const recurringRemindersReducer = (state = [], action) => {
   switch (action.type) {
     case FETCHED_USER:
-      const rec = []
-      action.payload.reminders.forEach(r => {
-        rec.push(...getRecurringEvents(r))
-      })
-      return rec
+      const rec = [];
+      action.payload.reminders.forEach((r) => {
+        rec.push(...getRecurringEvents(r));
+      });
+      return rec;
     case ADD_REMINDER:
-      return [...state, ...getRecurringEvents(action.reminder)]
+      return [...state, ...getRecurringEvents(action.reminder)];
     case UPDATE_REMINDER:
-      return [...state.filter(r => r.id !== action.reminder.id), ...getRecurringEvents(action.reminder)]
+      return [...state.filter((r) => r.id !== action.reminder.id), ...getRecurringEvents(action.reminder)];
     case DELETE_REMINDER:
-      return state.filter(r => r.id !== action.reminder.id)
+      return state.filter((r) => r.id !== action.reminder.id);
     case DELETE_CONTACT:
-      return state.filter(r => r.contact_id !== action.contact.id)
+      return state.filter((r) => r.contact_id !== action.contact.id);
     case LOGOUT_USER:
-      return []
-    default: return state
+      return [];
+    default:
+      return state;
   }
-}
+};
 
-const calendarFilterReducer = (state = '', action) => {
+const calendarFilterReducer = (state = "", action) => {
   switch (action.type) {
     case SET_PRIORITY_FILTER:
-      return action.term
+      return action.term;
     default:
-      return state
+      return state;
   }
-}
+};
 
-const featuredReminderReducer = (state={}, action) => {
+const featuredReminderReducer = (state = {}, action) => {
   switch (action.type) {
     case SET_FEATURED_REMINDER:
-      return action.reminder
+      return action.reminder;
     default:
-      return state
+      return state;
   }
-}
+};
 
-export { remindersReducer, recurringRemindersReducer, calendarFilterReducer, featuredReminderReducer }
+export { remindersReducer, recurringRemindersReducer, calendarFilterReducer, featuredReminderReducer };
