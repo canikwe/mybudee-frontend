@@ -38,7 +38,7 @@ const loadingReducer = (state = true, action) => {
 const notificationReducer = (state = [], action) => {
   switch (action.type) {
     case THROW_ERROR:
-      return action.errors;
+      return [action.errors];
     case UPDATING_USER:
       return { message: [action.data.message] };
     case CLEAR_ERROR:

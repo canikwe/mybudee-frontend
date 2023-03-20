@@ -7,6 +7,8 @@ import { Icon } from "semantic-ui-react";
 import { formatReminderToast } from "./helper/functions";
 import Footer from "./components/Footer";
 import { Routes } from "./routes/Routes";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type State = { reminders: any; notifications: any; contacts: any; loading: boolean };
 
@@ -32,7 +34,7 @@ export default function App() {
   }
 
   function alerts(reminder: any) {
-    return reminder.match ? console.log(formatReminderToast(reminder, contacts)) : null;
+    return reminder.match ? toast(formatReminderToast(reminder, contacts)) : null;
   }
 
   if (loading) {
@@ -48,6 +50,7 @@ export default function App() {
     return (
       <div className="App">
         <NavBar />
+        <ToastContainer />
         <Routes />
         <Footer />
       </div>

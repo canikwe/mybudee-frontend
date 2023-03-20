@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Calendar from "../components/Calendar";
 import ContactForm from "../components/ContactForm";
 import ContactShow from "../components/ContactShow";
-import Login from "../components/Login";
+import Login from "../pages/Login/Login";
 // import UserForm from "../components/UserForm/user-form.component";
 import ContactCardContainer from "../containers/ContactCardContainer";
 import Home from "../containers/Home";

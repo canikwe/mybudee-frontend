@@ -8,6 +8,7 @@ import {
   CLEAR_LOADING,
 } from "../types";
 import { authHeaders, BASE_URL } from "../types";
+import { toast } from "react-toastify";
 
 //Initial User Fetch, loading into state, and error handling
 const fetchedUser = (payload) => {
@@ -84,12 +85,12 @@ const authenticatingUser = (params) => {
           dispatch(fetchedUser(data));
           localStorage.setItem("token", data.token);
         } else {
-          dispatch(displayError(data.message));
+          toast(data.message, { type: "error" });
           dispatch(clearLoading());
         }
       })
       .catch((error) => {
-        dispatch(displayError(error));
+        toast(error.message, { type: "error" });
         throw error;
       });
   };
