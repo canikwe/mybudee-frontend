@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import "./App.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { testAction, fetchingUser, notifyReminders, clearLoading } from "./redux/actions";
@@ -15,8 +15,8 @@ type State = { reminders: any; notifications: any; contacts: any; loading: boole
 export default function App() {
   const { reminders, contacts, loading } = useSelector((state: State) => state);
   const dispatch = useDispatch();
-  useEffect(loginUser, []);
-  useEffect(sendReminderNotifications, [reminders]);
+
+  useEffect(loginUser, [dispatch]);
 
   function loginUser() {
     dispatch(testAction());
@@ -33,9 +33,14 @@ export default function App() {
     });
   }
 
-  function alerts(reminder: any) {
-    return reminder.match ? toast(formatReminderToast(reminder, contacts)) : null;
-  }
+  const alerts = useCallback(
+    (reminder: any) => {
+      return reminder.match ? toast(formatReminderToast(reminder, contacts)) : null;
+    },
+    [contacts]
+  );
+
+  useEffect(sendReminderNotifications, [reminders, dispatch, alerts]);
 
   if (loading) {
     return (
