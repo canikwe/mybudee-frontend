@@ -4,7 +4,7 @@ import { addingUser, updatingUser } from "../../redux/actions";
 import { Segment, Grid, Button } from "semantic-ui-react";
 import { isEmpty, pick } from "lodash";
 import { RouteComponentProps } from "react-router";
-import { User } from "./user.type";
+import { User } from "../../_models/User.model";
 
 type Props = { title: string } & RouteComponentProps;
 

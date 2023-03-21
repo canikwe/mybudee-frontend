@@ -4,15 +4,12 @@ import Calendar from "../components/Calendar";
 import ContactForm from "../components/ContactForm";
 import ContactShow from "../components/ContactShow";
 import Login from "../pages/Login/Login";
-// import UserForm from "../components/UserForm/user-form.component";
 import ContactCardContainer from "../containers/ContactCardContainer";
 import Home from "../containers/Home";
 import { isEmpty } from "lodash";
 import { useSelector } from "react-redux";
-import { User } from "../components/UserForm/user.type";
+import { ReduxState } from "redux/types";
 import Homepage from "../containers/Homepage";
-
-type State = { user: User; reminders: any; notifications: any; contacts: any; loading: boolean };
 
 enum Paths {
   CALENDAR = "/calendar",
@@ -27,7 +24,7 @@ enum Paths {
 }
 
 export function Routes() {
-  const { user, reminders, contacts } = useSelector((state: State) => state);
+  const { user, reminders, contacts } = useSelector((state: ReduxState) => state);
 
   return (
     <main className="main-content">

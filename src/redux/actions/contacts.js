@@ -1,65 +1,57 @@
-import { ADD_CONTACT, DELETE_CONTACT, UPDATE_CONTACT, UPDATE_SEARCH_TERM } from '../types'
-import { authHeaders, BASE_URL } from '../types'
+import { ADD_CONTACT, DELETE_CONTACT, UPDATE_CONTACT, UPDATE_SEARCH_TERM, authHeaders, BASE_URL } from "../types.ts";
 
-const addContact = newContactObj => {
-  return { type: ADD_CONTACT, contact: newContactObj }
-}
+const addContact = (newContactObj) => {
+  return { type: ADD_CONTACT, contact: newContactObj };
+};
 
-const addingContact = contact => {
+const addingContact = (contact) => {
   return (dispatch) => {
     fetch(`${BASE_URL()}/contacts`, {
-      method: 'POST',
+      method: "POST",
       headers: authHeaders(),
-      body: JSON.stringify(contact)
+      body: JSON.stringify(contact),
     })
-      .then(res => res.json())
-      .then(newContactObj => dispatch(addContact(newContactObj)))
-  }
-}
+      .then((res) => res.json())
+      .then((newContactObj) => dispatch(addContact(newContactObj)));
+  };
+};
 
-const updateContact = contact => {
-  return { type: UPDATE_CONTACT, contact: contact }
-}
+const updateContact = (contact) => {
+  return { type: UPDATE_CONTACT, contact: contact };
+};
 
 const updatingContact = (id, contact) => {
   return (dispatch) => {
     fetch(`${BASE_URL()}/contacts/${id}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: authHeaders(),
-      body: JSON.stringify(contact)
+      body: JSON.stringify(contact),
     })
-      .then(res => res.json())
-      .then(updatedContact => dispatch(updateContact(updatedContact)))
-  }
-}
+      .then((res) => res.json())
+      .then((updatedContact) => dispatch(updateContact(updatedContact)));
+  };
+};
 
-const deleteContact = contact => {
-  return { type: DELETE_CONTACT, contact: contact }
-}
+const deleteContact = (contact) => {
+  return { type: DELETE_CONTACT, contact: contact };
+};
 
-const deletingContact = contact => {
-  return dispatch => {
+const deletingContact = (contact) => {
+  return (dispatch) => {
     fetch(`${BASE_URL()}/contacts/${contact.id}`, {
-      method: 'DELETE',
-      headers: authHeaders()
+      method: "DELETE",
+      headers: authHeaders(),
     })
-      .then(res => res.json())
-      .then(contactObj => {
-        console.log(contactObj)
-        dispatch(deleteContact(contactObj))
-      })
-  }
-}
+      .then((res) => res.json())
+      .then((contactObj) => {
+        console.log(contactObj);
+        dispatch(deleteContact(contactObj));
+      });
+  };
+};
 
+const updateSearchTerm = (searchTerm) => {
+  return { type: UPDATE_SEARCH_TERM, searchTerm };
+};
 
-const updateSearchTerm = searchTerm => {
-  return { type: UPDATE_SEARCH_TERM, searchTerm }
-}
-
-
-export {
-  addingContact,
-  deletingContact,
-  updatingContact,
-  updateSearchTerm,
-}
+export { addingContact, deletingContact, updatingContact, updateSearchTerm };

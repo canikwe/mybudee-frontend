@@ -1,19 +1,22 @@
-import { combineReducers } from 'redux'
-import { remindersReducer, recurringRemindersReducer, calendarFilterReducer, featuredReminderReducer } from './reminders'
-import { contactsReducer, searchTermReducer } from './contacts'
-import { userReducer, loadingReducer, notificationReducer } from './users'
-import { TESTING_REDUCER } from '../types'
+import { combineReducers } from "redux";
+import {
+  remindersReducer,
+  recurringRemindersReducer,
+  calendarFilterReducer,
+  featuredReminderReducer,
+} from "./reminders";
+import { contactsReducer, searchTermReducer } from "./contacts";
+import { userReducer, loadingReducer, notificationReducer } from "./users";
+import { TESTING_REDUCER } from "../types.ts";
 
-
-
-const reduxConnection = (state='connected', action) => {
-  switch (action.type){
+const reduxConnection = (state = "connected", action) => {
+  switch (action.type) {
     case TESTING_REDUCER:
-      return state
-  default:
-    return state
+      return state;
+    default:
+      return state;
   }
-}
+};
 
 const rootReducer = combineReducers({
   reduxConnection: reduxConnection,
@@ -25,7 +28,7 @@ const rootReducer = combineReducers({
   notifications: notificationReducer,
   recurringReminders: recurringRemindersReducer,
   calendarFilter: calendarFilterReducer,
-  featuredReminder: featuredReminderReducer
-})
+  featuredReminder: featuredReminderReducer,
+});
 
-export default rootReducer
+export default rootReducer;

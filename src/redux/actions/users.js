@@ -6,11 +6,64 @@ import {
   CLEAR_ERROR,
   LOGOUT_USER,
   CLEAR_LOADING,
-} from "../types";
-import { authHeaders, BASE_URL } from "../types";
+} from "../types.ts";
+import { appFetch } from "../../helper/fetch";
 import { toast } from "react-toastify";
 
-//Initial User Fetch, loading into state, and error handling
+const fetchingUser = () => {
+  return (dispatch) => {
+    dispatch(loadingUser);
+
+    appFetch({ route: "profile", dispatch }, (data) => {
+      if (!!data.user.id) {
+        dispatch(fetchedUser(data));
+      } else {
+        dispatch(clearLoading());
+      }
+    });
+  };
+};
+
+const addingUser = (user) => {
+  return (dispatch) => {
+    dispatch(loadingUser);
+
+    appFetch({ route: "users", method: "POST", body: { user }, excludeAuth: true, dispatch }, (data) => {
+      if (data.authenticated) {
+        dispatch(fetchedUser(data));
+        localStorage.setItem("token", data.token);
+      } else {
+        dispatch(displayError(data));
+        dispatch(clearLoading());
+      }
+    });
+  };
+};
+
+const authenticatingUser = (params) => {
+  return (dispatch) => {
+    dispatch(loadingUser);
+
+    appFetch({ route: "login", method: "POST", body: params, excludeAuth: true, dispatch }, (data) => {
+      if (data.authenticated) {
+        dispatch(fetchedUser(data));
+        localStorage.setItem("token", data.token);
+      } else {
+        toast(data.message, { type: "error" });
+        dispatch(clearLoading());
+      }
+    });
+  };
+};
+
+const updatingUser = (user, id) => {
+  return (dispatch) => {
+    appFetch({ route: `users/${id}`, method: "PATCH", body: user, dispatch }, (data) => {
+      dispatch(updateUser(data));
+    });
+  };
+};
+
 const fetchedUser = (payload) => {
   return { type: FETCHED_USER, payload };
 };
@@ -27,95 +80,12 @@ const displayError = (errors) => {
   return { type: THROW_ERROR, errors };
 };
 
-const fetchingUser = (token) => {
-  return (dispatch) => {
-    dispatch(loadingUser);
-
-    fetch(`${BASE_URL()}/profile`, {
-      headers: authHeaders(),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.user.id !== undefined) {
-          dispatch(fetchedUser(data));
-        } else {
-          dispatch(clearLoading());
-        }
-      });
-  };
-};
-
-const addingUser = (user) => {
-  return (dispatch) => {
-    dispatch(loadingUser);
-
-    fetch(`${BASE_URL()}/users`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.authenticated) {
-          dispatch(fetchedUser(data));
-          localStorage.setItem("token", data.token);
-        } else {
-          dispatch(displayError(data));
-          dispatch(clearLoading());
-        }
-      })
-      .catch(console.error);
-  };
-};
-
-const authenticatingUser = (params) => {
-  return (dispatch) => {
-    dispatch(loadingUser);
-
-    fetch(`${BASE_URL()}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(params),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.authenticated) {
-          dispatch(fetchedUser(data));
-          localStorage.setItem("token", data.token);
-        } else {
-          toast(data.message, { type: "error" });
-          dispatch(clearLoading());
-        }
-      })
-      .catch((error) => {
-        toast(error.message, { type: "error" });
-        throw error;
-      });
-  };
-};
-
 const clearError = () => {
   return { type: CLEAR_ERROR };
 };
 
 const updateUser = (data) => {
   return { type: UPDATING_USER, data };
-};
-
-const updatingUser = (user, id) => {
-  return (dispatch) => {
-    fetch(`${BASE_URL()}/users/${id}`, {
-      method: "PATCH",
-      headers: authHeaders(),
-      body: JSON.stringify(user),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        dispatch(updateUser(data));
-      });
-  };
 };
 
 const logoutUser = () => {
