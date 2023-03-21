@@ -12,8 +12,6 @@ import { Routes } from "./routes/Routes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-type State = { reminders: any; notifications: any; contacts: any; loading: boolean };
-
 export default function App() {
   const { reminders, contacts, loading } = useSelector((state: ReduxState) => state);
   const dispatch = useDispatch();
@@ -30,13 +28,6 @@ export default function App() {
     reminders.forEach(sendReminderNotification);
   }
 
-  function sendReminderNotification(reminder: Reminder) {
-    if (reminder.match && !reminder.notified && !reminder.snoozed) {
-      alerts(reminder);
-      dispatch(notifyReminders(reminder));
-    }
-  }
-
   const alerts = useCallback(
     (reminder: any) => {
       return reminder.match ? toast(formatReminderToast(reminder, contacts)) : null;
@@ -44,7 +35,17 @@ export default function App() {
     [contacts]
   );
 
-  useEffect(sendReminderNotifications, [reminders, dispatch, alerts]);
+  const sendReminderNotification = useCallback(
+    (reminder: Reminder) => {
+      if (reminder.match && !reminder.notified && !reminder.snoozed) {
+        alerts(reminder);
+        dispatch(notifyReminders(reminder));
+      }
+    },
+    [dispatch, alerts]
+  );
+
+  useEffect(sendReminderNotifications, [reminders, dispatch, alerts, sendReminderNotification]);
 
   if (loading) {
     return (
