@@ -24,7 +24,7 @@ const Login = () => {
     <div className="wrapper backImage">
       <Grid centered textAlign="left">
         <Grid.Row>
-          <h1> </h1>
+          <h1>Log In</h1>
         </Grid.Row>
         <Grid.Row>
           <Segment id="login">
