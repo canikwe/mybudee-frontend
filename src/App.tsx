@@ -12,6 +12,9 @@ import { Routes } from "./routes/Routes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Temporary CI canary: an unused variable. Remove before merging.
+const ciCanary = 1;
+
 export default function App() {
   const { reminders, contacts, loading } = useSelector((state: ReduxState) => state);
   const dispatch = useDispatch();
